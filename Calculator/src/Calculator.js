@@ -27,7 +27,9 @@ class Calculator extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        inputValue: 0
+        previousInputValue: 0,
+        inputValue: 0,
+        selectedSymbol: null
     };
   }
 
@@ -62,6 +64,7 @@ class Calculator extends Component {
                 let input = rowButtons[col];
                 inputRow.push(
                     <InputButton value={input}
+                                 highlight={this.state.selectedSymbol === input}
                                  onPress={this.onInputButtonPressed.bind(this, input)}
                                  key={row + "-" + col} /  >
                 );
@@ -80,6 +83,8 @@ class Calculator extends Component {
         switch( typeof input){
             case 'number':
                 return this.handleNumberInput(input);
+            case 'string':
+                return this.handleStringInput(input);
         }
     }
 
@@ -89,6 +94,36 @@ class Calculator extends Component {
         this.setState({
                 inputValue: newInputValue
         });
+    }
+
+    handleStringInput(strInput){
+        switch(strInput){
+            case '/':
+            case '*':
+            case '+':
+            case '-':
+                this.setState({
+                    selectedSymbol: strInput,
+                    previousInputValue: this.state.inputValue,
+                    inputValue: 0
+                });
+                break;
+            case '=':
+                let symbol = this.state.selectedSymbol;
+                let inputValue = this.state.inputValue;
+                let previousInputValue = this.state.previousInputValue;
+
+                if(!symbol){
+                    return;
+                }
+
+                this.setState({
+                    previousInputValue: 0,
+                    inputValue: eval(previousInputValue + symbol + inputValue),
+                    selectedSymbol: null
+                });
+                break;
+        }
     }
 }
 
