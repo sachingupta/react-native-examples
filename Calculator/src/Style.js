@@ -31,7 +31,7 @@ var Style = StyleSheet.create({
         borderColor: '#91AA9D'
     },
 
-    inputButtonHighlighted {
+    inputButtonHighlighted: {
         backgroundColor: '#193441'
     },
 
